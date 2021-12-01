@@ -1,5 +1,4 @@
 import {config} from "@onflow/sdk"
-import {invariant} from "@onflow/util-invariant"
 
 const isServerSide = () => typeof window === "undefined"
 
@@ -31,7 +30,7 @@ export async function configLens(regex) {
   )
 }
 
-export async function buildAuthnConfig() {
+export async function getDiscoveryService() {
   const discoveryWallet = await config.first([
     "discovery.wallet",
     "challenge.handshake",
@@ -42,7 +41,9 @@ export async function buildAuthnConfig() {
     "discovery.wallet.method.default",
   ])
 
-  const appDomainTag = await config.get("fcl.appDomainTag")
-
-  return {discoveryWallet, discoveryWalletMethod, appDomainTag}
+  return {
+    type: "authn",
+    endpoint: discoveryWallet,
+    method: discoveryWalletMethod,
+  }
 }
